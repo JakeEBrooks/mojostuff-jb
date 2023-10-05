@@ -1,32 +1,76 @@
-from logging.ctime import CTimeSpec, get_clocktime
+from datetime.datetime import datetime
 
-@value
-struct datetime:
-    var era: Int
-    var year: Int
-    var month: Int
-    var day: Int
+struct logger:
+    var start_datetime: datetime
+    var loglevel: UInt8
 
-    var hour: Int
-    var minute: Int
-    var second: Int
+    fn __init__(inout self, loglevel: UInt8 = 1):
+        self.start_datetime = datetime()
+        self.loglevel = loglevel
+        let timestring = String(self.start_datetime.year) + "-"
+                        + String(self.start_datetime.month) + "-"
+                        + String(self.start_datetime.day) + " "
+                        + String(self.start_datetime.hour) + ":"
+                        + String(self.start_datetime.minute) + ":"
+                        + String(self.start_datetime.second) + "."
+                        + String(self.start_datetime.nanosecond)
+        print("--- Logging starting at", timestring)
 
-    fn __init__(inout self):
-        let timenow = get_clocktime()
-        var serial_days = timenow.seconds//86400
-        let day_remainder = timenow.seconds - serial_days*86400
+    fn debug(self, msg: String):
+        if self.loglevel <= 0:
+            let now = datetime()
+            let timestring = String(now.year) + "-"
+                            + String(now.month) + "-"
+                            + String(now.day) + " "
+                            + String(now.hour) + ":"
+                            + String(now.minute) + ":"
+                            + String(now.second) + "."
+                            + String(now.nanosecond)
+            print(timestring, "DEBUG |", msg)
 
-        self.hour = day_remainder//3600
-        self.minute = (day_remainder - self.hour*3600)//60
-        self.second = (day_remainder - self.hour*3600 - self.minute*60)
+    fn info(self, msg: String):
+        if self.loglevel <= 1:
+            let now = datetime()
+            let timestring = String(now.year) + "-"
+                            + String(now.month) + "-"
+                            + String(now.day) + " "
+                            + String(now.hour) + ":"
+                            + String(now.minute) + ":"
+                            + String(now.second) + "."
+                            + String(now.nanosecond)
+            print(timestring, "INFO |", msg)
 
-        self.era = (serial_days + 719468) // 146097
-        self.year = 0
-        self.month = 0
-        self.day = 0
+    fn warning(self, msg: String):
+        if self.loglevel <= 2:
+            let now = datetime()
+            let timestring = String(now.year) + "-"
+                            + String(now.month) + "-"
+                            + String(now.day) + " "
+                            + String(now.hour) + ":"
+                            + String(now.minute) + ":"
+                            + String(now.second) + "."
+                            + String(now.nanosecond)
+            print(timestring, "WARNING |", msg)
 
-
+    fn critical(self, msg: String):
+        if self.loglevel <= 3:
+            let now = datetime()
+            let timestring = String(now.year) + "-"
+                            + String(now.month) + "-"
+                            + String(now.day) + " "
+                            + String(now.hour) + ":"
+                            + String(now.minute) + ":"
+                            + String(now.second) + "."
+                            + String(now.nanosecond)
+            print(timestring, "CRITICAL |", msg)
     
-
-    
-
+    fn __del__(owned self):
+        let now = datetime()
+        let timestring = String(now.year) + "-"
+                        + String(now.month) + "-"
+                        + String(now.day) + " "
+                        + String(now.hour) + ":"
+                        + String(now.minute) + ":"
+                        + String(now.second) + "."
+                        + String(now.nanosecond)
+        print("--- Logging finishing at", timestring)

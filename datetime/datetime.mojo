@@ -15,9 +15,11 @@ struct datetime:
     var hour: Int
     var minute: Int
     var second: Int
+    var nanosecond: Int
 
     fn __init__(inout self):
         let clocktimenow = get_clocktime()
+        self.nanosecond = clocktimenow.nanoseconds
         let days_since_epoch = clocktimenow.seconds//86400
         let day_remainder = clocktimenow.seconds - days_since_epoch*86400
 
@@ -30,9 +32,6 @@ struct datetime:
         self.year = civil_time[2].__int__()
         self.month = civil_time[1].__int__()
         self.day = civil_time[0].__int__()
-    
-    fn update(inout self):
-        self.__init__()
 
 fn days_from_civil(day: Int, month: Int, year: Int) -> Int:
     """
